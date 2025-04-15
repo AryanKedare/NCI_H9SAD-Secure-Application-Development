@@ -27,8 +27,7 @@ public class UserView extends javax.swing.JFrame {
     /**
      * Creates new form ViewBook
      *
-     * @throws java.sql.SQLException
-     */
+     *  */
     public static String UserID;
 
     public UserView() throws SQLException {

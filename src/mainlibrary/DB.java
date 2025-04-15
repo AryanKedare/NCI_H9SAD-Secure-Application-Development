@@ -11,31 +11,59 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- *
- * @author bikash
+ * Database utility class for managing connections to the MySQL database.
  */
 public class DB {
 
+    // Database credentials
     public static String user = "root";
     public static String connection = "jdbc:mysql://localhost:3306/library?autoReconnect=true&useSSL=false";
-    
+
+    /**
+     * Retrieves a connection to the database.
+     * 
+     * @return Connection object or null if connection fails.
+     */
     public static Connection getConnection() {
         Connection con = null;
         try {
             Properties props = new Properties();
             props.put("user", user);
-     //change the password to the password  ↓↓↓↓↓↓↓↓↓↓↓   you enteredwhen setting up mysql
-            props.put("password", "password");
-            props.put("useUnicode", "true");
-            props.put("useServerPrepStmts", "false"); // use client-side prepared statement
-            props.put("characterEncoding", "UTF-8"); // ensure charset is utf8 here
 
-            Class.forName("com.mysql.jdbc.Driver");
+            // Use environment variables or a secure configuration file for the password in production
+            props.put("password", "Aryan123@");
+            props.put("useUnicode", "true");
+            props.put("useServerPrepStmts", "false"); // Use client-side prepared statements
+            props.put("characterEncoding", "UTF-8"); // Ensure charset is UTF-8
+
+            // Load the MySQL JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Establish the connection
             con = DriverManager.getConnection(connection, props);
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (ClassNotFoundException e) {
+            System.err.println("MySQL JDBC Driver not found. Ensure it's added to the classpath.");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            System.err.println("Failed to connect to the database. Check the connection URL, username, or password.");
+            e.printStackTrace();
         }
         return con;
     }
 
+    /**
+     * Safely closes the database connection.
+     * 
+     * @param con The Connection object to close.
+     */
+    public static void closeConnection(Connection con) {
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.err.println("Failed to close the database connection.");
+                e.printStackTrace();
+            }
+        }
+    }
 }
