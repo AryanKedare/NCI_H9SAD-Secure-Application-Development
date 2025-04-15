@@ -121,22 +121,35 @@ public class DeleteBook extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String Pass = String.valueOf(password.getPassword());
-        if (LibrarianDao.validate(UserName.getText(), Pass)) {
+        String Pass = String.valueOf(password.getPassword()).trim();
+        String UserNameV = UserName.getText().trim();
+        String BookIDV = BookID.getText().trim();
 
-            int BookIDV = Integer.parseInt(BookID.getText());
-            if (TransBookDao.CheckIssuedBook(BookIDV)) {
-                JOptionPane.showMessageDialog(DeleteBook.this, "Book is Issued", "Error!", JOptionPane.ERROR_MESSAGE);
-            } else {
-                if (BookDao.Delete(BookIDV) != 0) {
-                    JOptionPane.showMessageDialog(DeleteBook.this, "Book is Deleted", "Deleted!", JOptionPane.ERROR_MESSAGE);
-                    UserName.setText("");
-                    password.setText("");
-                    BookID.setText("");
+        // Validate input to prevent empty or invalid values
+        if (UserNameV.isEmpty() || Pass.isEmpty() || BookIDV.isEmpty()) {
+            JOptionPane.showMessageDialog(DeleteBook.this, "All fields must be filled!", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            int BookIDInt = Integer.parseInt(BookIDV);
+
+            if (LibrarianDao.validate(UserNameV, Pass)) {
+                if (TransBookDao.CheckIssuedBook(BookIDInt)) {
+                    JOptionPane.showMessageDialog(DeleteBook.this, "Book is Issued", "Error!", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(DeleteBook.this, "Unable to delete book", "Error!", JOptionPane.ERROR_MESSAGE);
+                    if (BookDao.Delete(BookIDInt) != 0) {
+                        JOptionPane.showMessageDialog(DeleteBook.this, "Book is Deleted", "Deleted!", JOptionPane.INFORMATION_MESSAGE);
+                        UserName.setText("");
+                        password.setText("");
+                        BookID.setText("");
+                    } else {
+                        JOptionPane.showMessageDialog(DeleteBook.this, "Unable to delete book", "Error!", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(DeleteBook.this, "Invalid Book ID!", "Input Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
