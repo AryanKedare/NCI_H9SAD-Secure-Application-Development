@@ -164,22 +164,23 @@ public class LibrarianLogin extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String Uname;
-        Uname = username.getText();
-        String Pass;
-        Pass = String.valueOf(password.getPassword());
-        System.out.println(Uname + " " + Pass);
-        if (LibrarianDao.validate(Uname, Pass)) {
+        String Uname = username.getText().trim();
+        String Pass = String.valueOf(password.getPassword()).trim();
 
+        // Validate input to prevent empty or invalid values
+        if (Uname.isEmpty() || Pass.isEmpty()) {
+            JOptionPane.showMessageDialog(LibrarianLogin.this, "Username and Password must not be empty!", "Login Error!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (LibrarianDao.validate(Uname, Pass)) {
             this.dispose();
             LibrarianSuccess.main(new String[]{Uname, Pass});
-
         } else {
             JOptionPane.showMessageDialog(LibrarianLogin.this, "Sorry, Username or Password Error", "Login Error!", JOptionPane.ERROR_MESSAGE);
             username.setText("");
             password.setText("");
         }
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
