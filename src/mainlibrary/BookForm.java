@@ -236,22 +236,28 @@ public class BookForm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String BookN = BookName.getText();
-        String AuthorN = Author.getText();
-        String PublisherN = Publisher.getText();
-        String ShelfN = Shelf.getText();
-        String RowN = Row.getText();
-        String GenreN = Genre.getText();
+        String BookN = BookName.getText().trim();
+        String AuthorN = Author.getText().trim();
+        String PublisherN = Publisher.getText().trim();
+        String ShelfN = Shelf.getText().trim();
+        String RowN = Row.getText().trim();
+        String GenreN = Genre.getText().trim();
+
+        // Validate input to prevent empty or null values
+        if (BookN.isEmpty() || AuthorN.isEmpty() || PublisherN.isEmpty() || ShelfN.isEmpty() || RowN.isEmpty() || GenreN.isEmpty()) {
+            JOptionPane.showMessageDialog(BookForm.this, "All fields must be filled!", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         if (BookDao.PublisherValidate(PublisherN)) {
-
+            
         } else {
             if (BookDao.AddPublisher(PublisherN) != 0) {
                 ; // JOptionPane.showMessageDialog(BookForm.this, "Sorry, Publisher can't be added!","Publisher Error!", JOptionPane.ERROR_MESSAGE);
             }
         }
         if (BookDao.SaveBook(BookN, AuthorN, PublisherN, ShelfN, RowN, GenreN) != 0) {
-            JOptionPane.showMessageDialog(BookForm.this, "The Book is added!", "Book Added!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(BookForm.this, "The Book is added!", "Book Added!", JOptionPane.INFORMATION_MESSAGE);
             BookName.setText("");
             Author.setText("");
             Publisher.setText("");
@@ -263,6 +269,7 @@ public class BookForm extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
 
     private void GenreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenreActionPerformed
         // TODO add your handling code here:
