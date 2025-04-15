@@ -35,7 +35,7 @@ public class AllStudent extends javax.swing.JFrame {
         // String Data[][]=null;
         //  String Column[]=null;
         try (Connection Con = DB.getConnection()) {
-            PreparedStatement ps = Con.prepareStatement("select * from Users", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement ps = Con.prepareStatement("select UserID, RegDate, UserName, Email from Users", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = ps.executeQuery();
 
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -53,7 +53,7 @@ public class AllStudent extends javax.swing.JFrame {
 
             Con.close();
         } catch (Exception e) {
-            e.printStackTrace(System.out);
+            // Removed sensitive exception printing
         }
     }
 
@@ -262,9 +262,9 @@ public class AllStudent extends javax.swing.JFrame {
                 Row = new String[colnum];
                 while (rs.next()) {
                     for (int i = 1; i <= colnum; i++) {
-                        Row[i - 1] = rs.getString(i);
-                    }
-                    model.addRow(Row);
+                                                    Row[i - 1] = rs.getString(i);
+                        }
+                                        model.addRow(Row);
                 }
                 int rowcount = model.getRowCount();
                 System.out.println(rowcount);
@@ -303,9 +303,9 @@ public class AllStudent extends javax.swing.JFrame {
                 Row = new String[colnum];
                 while (rs.next()) {
                     for (int i = 1; i <= colnum; i++) {
-                        Row[i - 1] = rs.getString(i);
-                    }
-                    model.addRow(Row);
+                                                    Row[i - 1] = rs.getString(i);
+                        }
+                                        model.addRow(Row);
                 }
                 int rowcount = model.getRowCount();
                 System.out.println(rowcount);
@@ -351,7 +351,7 @@ public class AllStudent extends javax.swing.JFrame {
         }
 
         try (Connection Con = DB.getConnection()) {
-            PreparedStatement ps = Con.prepareStatement("select * from Users", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement ps = Con.prepareStatement("select UserID, RegDate, UserName, Email from Users", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = ps.executeQuery();
 
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -371,14 +371,14 @@ public class AllStudent extends javax.swing.JFrame {
         } catch (Exception e) {
             System.out.println(e);
         }
-    }//GEN-LAST:event_ALLActionPerformed
+    }//GEN-LASvent_ALLActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        //itor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
