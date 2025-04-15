@@ -160,21 +160,23 @@ public class UserLogin extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String User;
-        User = username.getText();
-        String Pass = String.valueOf(password.getPassword());
-        System.out.println(User + " " + Pass);
-        UsersDao.validate(User, Pass);
+        String User = username.getText().trim();
+        String Pass = String.valueOf(password.getPassword()).trim();
+
+        // Validate input to prevent empty or invalid values
+        if (User.isEmpty() || Pass.isEmpty()) {
+            JOptionPane.showMessageDialog(UserLogin.this, "Username and Password must not be empty!", "Login Error!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         if (UsersDao.validate(User, Pass)) {
             this.dispose();
             UserLoginSuccess.main(new String[]{User, Pass});
-
         } else {
             JOptionPane.showMessageDialog(UserLogin.this, "Sorry, Username or Password Error", "Login Error!", JOptionPane.ERROR_MESSAGE);
             username.setText("");
             password.setText("");
         }
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
