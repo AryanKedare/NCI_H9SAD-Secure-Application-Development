@@ -239,45 +239,48 @@ public class IssueBookForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        int BookIDV;
-        BookIDV = Integer.parseInt(BookID.getText());
-        int UserIDV;
-        UserIDV = Integer.parseInt(UserID.getText());
+    // TODO add your handling code here:
+    String BookIDV = BookID.getText().trim();
+    String UserIDV = UserID.getText().trim();
+
+    // Validate input to prevent empty or invalid values
+    if (BookIDV.isEmpty() || UserIDV.isEmpty()) {
+        JOptionPane.showMessageDialog(IssueBookForm.this, "All fields must be filled!", "Input Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    try {
+        int BookIDInt = Integer.parseInt(BookIDV);
+        int UserIDInt = Integer.parseInt(UserIDV);
 
         String IFDate = IYear.getText() + "-" + IMonth.getText() + "-" + IDate.getText();
         String RFDate = RYear.getText() + "-" + RMonth.getText() + "-" + RDate.getText();
-        System.out.println(IFDate);
 
-        //Date IFDDate = cal.getDate();
-        if (TransBookDao.BookValidate(BookID.getText()) && TransBookDao.UserValidate(UserID.getText())) {
-
-            if (TransBookDao.Check(UserIDV) == 0) {
+        if (TransBookDao.BookValidate(BookIDV) && TransBookDao.UserValidate(UserIDV)) {
+            if (TransBookDao.Check(UserIDInt) == 0) {
                 JOptionPane.showMessageDialog(IssueBookForm.this, "User has already Issued Maximum No of Books", "Issue Error!", JOptionPane.ERROR_MESSAGE);
             } else {
-                if (TransBookDao.IssueBook(BookIDV, UserIDV, IFDate, RFDate) != 0) {
-
-                    JOptionPane.showMessageDialog(IssueBookForm.this, "The Book  is Issued!", "Book Issued!", JOptionPane.ERROR_MESSAGE);
+                if (TransBookDao.IssueBook(BookIDInt, UserIDInt, IFDate, RFDate) != 0) {
+                    JOptionPane.showMessageDialog(IssueBookForm.this, "The Book is Issued!", "Book Issued!", JOptionPane.INFORMATION_MESSAGE);
                     BookID.setText("");
                     UserID.setText("");
                 } else {
                     JOptionPane.showMessageDialog(IssueBookForm.this, "Unable to Issue Book!", "Issuing Book Error!", JOptionPane.ERROR_MESSAGE);
                 }
             }
-
         } else {
-            if (TransBookDao.UserValidate(UserID.getText())) {
-                JOptionPane.showMessageDialog(IssueBookForm.this, "The Book  is NOT available in Library Database!", "Issuing Book Error!", JOptionPane.ERROR_MESSAGE);
-            } else if (TransBookDao.BookValidate(BookID.getText())) {
+            if (TransBookDao.UserValidate(UserIDV)) {
+                JOptionPane.showMessageDialog(IssueBookForm.this, "The Book is NOT available in Library Database!", "Issuing Book Error!", JOptionPane.ERROR_MESSAGE);
+            } else if (TransBookDao.BookValidate(BookIDV)) {
                 JOptionPane.showMessageDialog(IssueBookForm.this, "The User is NOT available in Library Database!", "Issuing Book Error!", JOptionPane.ERROR_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(IssueBookForm.this, "The Book  and User are NOT available in Library Database!", "Issuing Book Error!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(IssueBookForm.this, "The Book and User are NOT available in Library Database!", "Issuing Book Error!", JOptionPane.ERROR_MESSAGE);
             }
-
         }
-        //  if(IssueBookDao.)
-
-    }//GEN-LAST:event_jButton1ActionPerformed
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(IssueBookForm.this, "Invalid Book ID or User ID!", "Input Error", JOptionPane.ERROR_MESSAGE);
+    }
+}//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
