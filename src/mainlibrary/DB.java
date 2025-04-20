@@ -42,11 +42,9 @@ public class DB {
             // Establish the connection
             con = DriverManager.getConnection(connection, props);
         } catch (ClassNotFoundException e) {
-            System.err.println("MySQL JDBC Driver not found. Ensure it's added to the classpath.");
-            e.printStackTrace();
+            logError("MySQL JDBC Driver not found. Ensure it's added to the classpath.", e);
         } catch (SQLException e) {
-            System.err.println("Failed to connect to the database. Check the connection URL, username, or password.");
-            e.printStackTrace();
+            logError("Failed to connect to the database. Check the connection URL, username, or password.", e);
         }
         return con;
     }
@@ -61,9 +59,27 @@ public class DB {
             try {
                 con.close();
             } catch (SQLException e) {
-                System.err.println("Failed to close the database connection.");
-                e.printStackTrace();
+                logError("Failed to close the database connection.", e);
             }
+        }
+    }
+
+    /**
+     * Logs errors in a secure way.
+     * 
+     * @param message The error message to log.
+     * @param e       The exception to log.
+     */
+    private static void logError(String message, Exception e) {
+        // Dynamically set debug mode based on an environment variable or system property
+        boolean isDebugMode = Boolean.parseBoolean(System.getenv("DEBUG_MODE")); // Reads DEBUG_MODE from environment variables
+
+        if (isDebugMode) {
+            System.err.println(message);
+            e.printStackTrace();
+        } else {
+            // Log the error securely (e.g., to a file or monitoring system)
+            // Example: Logger.error(message, e);
         }
     }
 }
