@@ -16,7 +16,6 @@ import java.util.Properties;
 public class DB {
 
     // Database credentials
-    public static String user = "root";
     public static String connection = "jdbc:mysql://localhost:3306/library?autoReconnect=true&useSSL=false";
 
     /**
@@ -28,8 +27,11 @@ public class DB {
         Connection con = null;
         try {
             Properties props = new Properties();
+            // Get username and password from environment variables
+            String user = System.getenv("DB_USER");
+            String password = System.getenv("DB_PASS");
             props.put("user", user);
-            props.put("password", "Aryan123@");
+            props.put("password", password);
             props.put("useUnicode", "true");
             props.put("useServerPrepStmts", "false");
             props.put("characterEncoding", "UTF-8");
