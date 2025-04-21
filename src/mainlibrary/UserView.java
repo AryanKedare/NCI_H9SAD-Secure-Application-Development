@@ -36,42 +36,30 @@ public class UserView extends javax.swing.JFrame {
         initComponents();
 
         int UserIDV = Integer.parseInt(UserID);
-        DefaultTableModel model;
-        model = (DefaultTableModel) jTable1.getModel();
-        // String Data[][]=null;
-        //  String Column[]=null;
-        try (Connection Con = DB.getConnection()) {
-            PreparedStatement ps = Con.prepareStatement("select IssuedBook.BookID,Books.BookName , IssuedBook.IssueDate, IssuedBook.ReturnDate from Books,IssuedBook where Books.BookID=IssuedBook.BookID and IssuedBook.UserID=?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+        try (Connection Con = DB.getConnection();
+             PreparedStatement ps = Con.prepareStatement(
+                 "SELECT IssuedBook.BookID, Books.BookName, IssuedBook.IssueDate, IssuedBook.ReturnDate " +
+                 "FROM Books, IssuedBook " +
+                 "WHERE Books.BookID = IssuedBook.BookID AND IssuedBook.UserID = ?",
+                 ResultSet.TYPE_SCROLL_SENSITIVE,
+                 ResultSet.CONCUR_UPDATABLE)) {
+
             ps.setInt(1, UserIDV);
-            ResultSet rs = ps.executeQuery();
 
-            ResultSetMetaData rsmd = rs.getMetaData();
+            try (ResultSet rs = ps.executeQuery()) {
+                ResultSetMetaData rsmd = rs.getMetaData();
+                int colnum = rsmd.getColumnCount();
+                String[] Row = new String[colnum];
 
-            int colnum = rsmd.getColumnCount();
-
-            /*   Column = new String[colnum];
-            for(int i=1;i<=colnum;i++){
-               Column[i-1]=rsmd.getColumnClassName(i);
+                while (rs.next()) {
+                    for (int i = 1; i <= colnum; i++) {
+                        Row[i - 1] = rs.getString(i);
+                    }
+                    model.addRow(Row);
                 }
-            rs.last();
-            
-            int rows=rs.getRow();
-            rs.beforeFirst();
-            
-            String[][] data = new String[rows][colnum];
-            
-            int count=0; */
-            String Row[];
-            Row = new String[colnum];
-            while (rs.next()) {
-                for (int i = 1; i <= colnum; i++) {
-                    Row[i - 1] = rs.getString(i);
-                }
-                model.addRow(Row);
             }
-
-            //count++;
-            Con.close();
         } catch (Exception e) {
             System.out.println(e);
         }

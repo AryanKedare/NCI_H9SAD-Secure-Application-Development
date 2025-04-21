@@ -29,22 +29,15 @@ public class DB {
         try {
             Properties props = new Properties();
             props.put("user", user);
-
-            // Use environment variables or a secure configuration file for the password in production
             props.put("password", "Aryan123@");
             props.put("useUnicode", "true");
-            props.put("useServerPrepStmts", "false"); // Use client-side prepared statements
-            props.put("characterEncoding", "UTF-8"); // Ensure charset is UTF-8
+            props.put("useServerPrepStmts", "false");
+            props.put("characterEncoding", "UTF-8");
 
-            // Load the MySQL JDBC driver
             Class.forName("com.mysql.cj.jdbc.Driver");
-
-            // Establish the connection
             con = DriverManager.getConnection(connection, props);
-        } catch (ClassNotFoundException e) {
-            logError("MySQL JDBC Driver not found. Ensure it's added to the classpath.", e);
-        } catch (SQLException e) {
-            logError("Failed to connect to the database. Check the connection URL, username, or password.", e);
+        } catch (ClassNotFoundException | SQLException e) {
+            logError("Database connection error.", e);
         }
         return con;
     }
@@ -72,7 +65,7 @@ public class DB {
      */
     private static void logError(String message, Exception e) {
         // Dynamically set debug mode based on an environment variable or system property
-        boolean isDebugMode = Boolean.parseBoolean(System.getenv("DEBUG_MODE")); // Reads DEBUG_MODE from environment variables
+        boolean isDebugMode = Boolean.parseBoolean(System.getProperty("DEBUG_MODE", "false")); // Reads DEBUG_MODE system property, defaults to "false"
 
         if (isDebugMode) {
             System.err.println(message);
