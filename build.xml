@@ -9,6 +9,9 @@
     <property name="dist.dir" value="dist"/>
     <property name="lib.dir" value="lib"/>
     <property name="main.class" value="mainlibrary.MainLibrary"/>
+    <property name="jacoco.dir" value="jacoco"/>
+    <property name="jacoco.exec.file" value="${build.dir}/jacoco.exec"/>
+    <property name="jacoco.report.dir" value="${build.dir}/jacoco-report"/>
 
     <!-- Clean build and dist directories -->
     <target name="clean">
@@ -22,6 +25,40 @@
         <javac srcdir="${src.dir}" destdir="${build.dir}"/>
     </target>
 
+    <!-- Run tests with JaCoCo instrumentation -->
+    <target name="test" depends="compile">
+        <mkdir dir="${jacoco.dir}"/>
+        <java classname="org.junit.runner.JUnitCore" fork="true" failonerror="true">
+            <classpath>
+                <pathelement path="${build.dir}"/>
+                <pathelement path="junit-4.13.2.jar"/>
+                <pathelement path="hamcrest-core-1.3.jar"/>
+            </classpath>
+            <jvmarg value="-javaagent:jacocoagent.jar=destfile=${jacoco.exec.file}"/>
+        </java>
+    </target>
+
+<!-- Generate JaCoCo coverage report -->
+<target name="jacoco-report" depends="test">
+    <mkdir dir="${jacoco.report.dir}"/>
+    <taskdef name="jacocoReport" classname="org.jacoco.ant.ReportTask" classpath="jacocoant.jar"/>
+    <jacocoReport>
+        <executiondata>
+            <file file="${jacoco.exec.file}"/>
+        </executiondata>
+        <structure name="securityProject">
+            <classfiles>
+                <fileset dir="${build.dir}"/>
+            </classfiles>
+            <sourcefiles>
+                <fileset dir="${src.dir}"/>
+            </sourcefiles>
+        </structure>
+        <html destdir="${jacoco.report.dir}/html"/>
+        <csv destfile="${jacoco.report.dir}/coverage.csv"/>
+        <xml destfile="${jacoco.report.dir}/coverage.xml"/>
+    </jacocoReport>
+</target>
     <!-- Create JAR with MySQL connector in Class-Path -->
     <target name="jar" depends="compile">
         <mkdir dir="${dist.dir}"/>
